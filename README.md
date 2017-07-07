@@ -1,12 +1,15 @@
 # Serverless Auth
 
-This is a serverless authorization example.
+> Pangolins are a protected species!
 
-This service has two endpoints:
+![Pangolins are protected species!](http://i.imgur.com/ReO39.jpg)
+
+This is a serverless authorization example using JSON Web Tokens (JWTs.)
+It has three endpoints:
 
 - `GET /cats` is a public endpoint anyone can access.
 - `GET /pangolins` is a private endpoint, protected by an AWS Custom Authorizer.
-- `POST /sessions` is a login endpoint. Pass a valid username and password to get a JWT. You can log in by passing the following request JSON body:
+- `POST /sessions` is a login endpoint. Pass a valid username and password in a JSON request body to get a JWT (see `/lib/users.js` for valid combinations.) For example:
 
 ```
 {
@@ -15,7 +18,9 @@ This service has two endpoints:
 }
 ```
 
-In order to pass the authorization check, you will need to supply a valid token in your `Authorization` request header.
+In order to pass the *authentication* check, you will need to supply a valid JWT in your `Authorization` request header when making calls to a protected endpoint.
+
+In order to pass the *authorization* check, you will need a JWT belonging to a user with valid permissions. For this example, the user `Cthon98` is authorized to access `GET /pangolins`; `AzureDiamond` is not.
 
 ## Setup
 

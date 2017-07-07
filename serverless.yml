@@ -41,6 +41,7 @@ functions:
           path: cats
           method: get
           cors: true
+          # authorizer: authorize # Cats are public
   getPangolins:
     handler: functions/getPangolins.handler
     events:
@@ -48,4 +49,4 @@ functions:
           path: pangolins
           method: get
           cors: true
-          authorizer: authorize
+          authorizer: authorize # Pangolins are protected

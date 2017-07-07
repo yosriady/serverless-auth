@@ -1,44 +1,41 @@
+const _ = require('lodash');
+const jwt = require('jsonwebtoken');
+const utils = require('../lib/utils');
+
+/**
+  * Authorizer functions are executed before your actual functions.
+  * @method authorize
+  * @param {String} event.authorizationToken - JWT
+  * @throws Returns 401 if the token is invalid or has expired.
+  * @throws Returns 403 if the token does not have sufficient permissions.
+  */
 module.exports.handler =  (event, context, callback) => {
     console.log('authorize');
     console.log(event);
     const token = event.authorizationToken;
     console.log(token);
 
-    // TODO: token should be a JWT
-    // TODO: verify JWT
+    try {
+      // Verify JWT
+      const decoded = jwt.verify(token, process.env.JWT_SECRET);
+      console.log(JSON.stringify(decoded));
 
-    switch (token.toLowerCase()) {
-        case 'allow':
-            callback(null, generatePolicy('user', 'Allow', event.methodArn));
-            break;
-        case 'deny':
-            callback(null, generatePolicy('user', 'Deny', event.methodArn));
-            break;
-        default:
-            callback("Unauthorized");   // Return a 401 Unauthorized response
+      // Checks if the user's scopes allow her to call the current endpoint ARN
+      const user = decoded.user;
+      const isAllowed = authorizeUser(user.scopes, event.methodArn);
+
+      // Return an IAM policy document for the current endpoint
+      const outcome = isAllowed ? 'Allow' : 'Deny';
+      const policyDocument = utils.buildIAMPolicy(user.username, outcome, event.methodArn);
+      callback(null, policyDocument);
+    } catch(e) {
+      console.log(e.message);
+      callback("Unauthorized"); // Return a 401 Unauthorized response
     }
 };
 
-const generatePolicy = (principalId, effect, resource) => {
-    const authResponse = {};
-
-    authResponse.principalId = principalId;
-    if (effect && resource) {
-        const policyDocument = {};
-        policyDocument.Version = '2012-10-17'; // default version
-        policyDocument.Statement = [];
-        const statementOne = {};
-        statementOne.Action = 'execute-api:Invoke'; // default action
-        statementOne.Effect = effect;
-        statementOne.Resource = resource;
-        policyDocument.Statement[0] = statementOne;
-        authResponse.policyDocument = policyDocument;
-    }
-
-    // Can optionally return a context object of your choosing.
-    authResponse.context = {};
-    authResponse.context.stringKey = "stringval";
-    authResponse.context.numberKey = 123;
-    authResponse.context.booleanKey = true;
-    return authResponse;
+// Returns a boolean whether or not a user is allowed to call a particular method
+// i.e. 'arn:aws:execute-api:ap-southeast-1:random-account-id:random-api-id/dev/GET/pangolins'
+const authorizeUser = (userScopes, methodArn) => {
+  return _.some(userScopes, (scope) => _.endsWith(event.methodArn, scope));
 }

@@ -1,3 +1,9 @@
+/**
+  * GET /pangolins
+  *
+  * Returns a collection of pangolins.
+  * @returns {Array.Object}
+  */
 module.exports.handler = (event, context, callback) => {
   console.log('getPangolins');
   const response = {

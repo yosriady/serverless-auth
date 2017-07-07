@@ -7,7 +7,6 @@ module.exports.handler =  (event, context, callback) => {
     // TODO: token should be a JWT
     // TODO: verify JWT
 
-
     switch (token.toLowerCase()) {
         case 'allow':
             callback(null, generatePolicy('user', 'Allow', event.methodArn));

@@ -4,8 +4,16 @@ This is a serverless authorization example.
 
 This service has two endpoints:
 
-- `/cats` is a public endpoint anyone can access.
-- `/pangolins` is a private endpoint, protected by an AWS Custom Authorizer.
+- `GET /cats` is a public endpoint anyone can access.
+- `GET /pangolins` is a private endpoint, protected by an AWS Custom Authorizer.
+- `POST /sessions` is a login endpoint. Pass a valid username and password to get a JWT. You can log in by passing the following request JSON body:
+
+```
+{
+	"username": "Cthon98",
+	"password": "hunter2"
+}
+```
 
 In order to pass the authorization check, you will need to supply a valid token in your `Authorization` request header.
 
@@ -39,6 +47,11 @@ yarn test:coverage
 
 ```
 yarn eslint
+```
+
+### Running locally
+```
+serverless offline start
 ```
 
 ### Deploy

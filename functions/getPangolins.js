@@ -6,7 +6,13 @@ module.exports.handler = (event, context, callback) => {
       'Access-Control-Allow-Origin': '*', // Required for CORS support to work
     },
     body: JSON.stringify({
-      pangolins: [],
+      pangolins: [
+        {
+          id: 2,
+          name: 'Pengu',
+          address: '123 Carapace Drive'
+        },
+      ],
     }),
   };
 

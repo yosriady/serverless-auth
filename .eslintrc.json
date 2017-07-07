@@ -1,0 +1,22 @@
+{
+    "extends": "airbnb-base",
+    "plugins": [
+        "import"
+    ],
+    "globals": {
+      "afterAll": true,
+      "afterEach": true,
+      "beforeAll": true,
+      "beforeEach": true,
+      "describe": true,
+      "expect": true,
+      "fail": true,
+      "it": true,
+      "jasmine": true,
+      "jest": true,
+      "test": true
+    },
+    "rules": {
+      "no-console": 0
+    }
+}

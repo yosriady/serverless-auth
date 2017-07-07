@@ -1,0 +1,7 @@
+{
+  "name": "serverless-auth",
+  "version": "1.0.0",
+  "repository": "git@github.com:yosriady/serverless-auth.git",
+  "author": "Yos Riady <yosriady@gmail.com>",
+  "license": "MIT"
+}

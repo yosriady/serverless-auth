@@ -11,14 +11,25 @@ service: serverless-auth
 provider:
   name: aws
   runtime: nodejs6.10
+  profile: personal
+  region: ap-southeast-1
 
 # The `functions` block defines what code to deploy
 functions:
-  helloWorld:
-    handler: handler.helloWorld
-    # The `events` block defines how to trigger the handler.helloWorld code
+  authorize:
+    handler: functions/authorize.handler
+  getCats:
+    handler: functions/getCats.handler
     events:
       - http:
-          path: hello-world
+          path: cats
           method: get
           cors: true
+  getPangolins:
+    handler: functions/getPangolins.handler
+    events:
+      - http:
+          path: pangolins
+          method: get
+          cors: true
+          authorizer: authorize

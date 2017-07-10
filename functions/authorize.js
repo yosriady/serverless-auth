@@ -6,6 +6,7 @@ const utils = require('../lib/utils');
 // A user with scopes: ['pangolins'] can
 // call 'arn:aws:execute-api:ap-southeast-1::random-api-id/dev/GET/pangolins'
 const authorizeUser = (userScopes, methodArn) => {
+  console.log(`authorizeUser ${JSON.stringify(userScopes)} ${methodArn}`);
   const hasValidScope = _.some(userScopes, scope => _.endsWith(methodArn, scope));
   return hasValidScope;
 };
@@ -21,7 +22,6 @@ module.exports.handler = (event, context, callback) => {
   console.log('authorize');
   console.log(event);
   const token = event.authorizationToken;
-  console.log(token);
 
   try {
     // Verify JWT
@@ -33,8 +33,12 @@ module.exports.handler = (event, context, callback) => {
     const isAllowed = authorizeUser(user.scopes, event.methodArn);
 
     // Return an IAM policy document for the current endpoint
-    const outcome = isAllowed ? 'Allow' : 'Deny';
-    const policyDocument = utils.buildIAMPolicy(user.username, outcome, event.methodArn, user);
+    const effect = isAllowed ? 'Allow' : 'Deny';
+    const userId = user.username;
+    const authorizerContext = { user: JSON.stringify(user) };
+    const policyDocument = utils.buildIAMPolicy(userId, effect, event.methodArn, authorizerContext);
+
+    console.log('Returning IAM policy document');
     callback(null, policyDocument);
   } catch (e) {
     console.log(e.message);

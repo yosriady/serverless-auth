@@ -20,24 +20,34 @@ module.exports.handler = (event, context, callback) => {
   try {
     // Authenticate user
     const user = users.login(username, password);
+    console.log(user);
 
     // Issue JWT
     const token = jwt.sign({ user }, process.env.JWT_SECRET, { expiresIn: JWT_EXPIRATION_TIME });
     console.log(`JWT issued: ${token}`);
     const response = { // Success response
       statusCode: 200,
-      body: {
-        token,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
       },
+      body: JSON.stringify({
+        token,
+      }),
     };
+
+    // Return response
+    console.log(response);
     callback(null, response);
   } catch (e) {
     console.log(`Error logging in: ${e.message}`);
     const response = { // Error response
       statusCode: 401,
-      body: {
-        error: e.message,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
       },
+      body: JSON.stringify({
+        error: e.message,
+      }),
     };
     callback(null, response);
   }

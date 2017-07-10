@@ -16,7 +16,7 @@ module.exports.handler = (event, context, callback) => {
         {
           id: 2,
           name: 'Pengu',
-          address: '123 Carapace Drive'
+          address: '123 Carapace Drive',
         },
       ],
     }),

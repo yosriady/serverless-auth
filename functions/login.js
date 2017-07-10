@@ -13,7 +13,7 @@ const JWT_EXPIRATION_TIME = '5m';
   * @throws Returns 401 if the user is not found or password is invalid.
   * @returns {Object} jwt that expires in 5 mins
   */
-module.exports.handler =  (event, context, callback) => {
+module.exports.handler = (event, context, callback) => {
   console.log('login');
   const { username, password } = JSON.parse(event.body);
 
@@ -28,8 +28,8 @@ module.exports.handler =  (event, context, callback) => {
       statusCode: 200,
       body: {
         token,
-      }
-    }
+      },
+    };
     callback(null, response);
   } catch (e) {
     console.log(`Error logging in: ${e.message}`);
@@ -37,8 +37,8 @@ module.exports.handler =  (event, context, callback) => {
       statusCode: 401,
       body: {
         error: e.message,
-      }
-    }
+      },
+    };
     callback(null, response);
   }
-}
+};

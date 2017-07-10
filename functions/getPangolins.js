@@ -6,6 +6,8 @@
   */
 module.exports.handler = (event, context, callback) => {
   console.log('getPangolins');
+  console.log(event);
+  console.log(event.requestContext.authorizer); // user context
   const response = {
     statusCode: 200,
     headers: {

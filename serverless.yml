@@ -17,9 +17,10 @@ custom:
 # The `provider` block defines where your service will be deployed
 provider:
   name: aws
-  runtime: nodejs6.10
+  #  runtime: nodejs6.10
+  runtime: nodejs10.x
   profile: personal
-  region: ap-southeast-1
+  region: us-east-1
   environment:
     JWT_SECRET: ${self:custom.secrets.jwtSecret}
 

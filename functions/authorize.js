@@ -5,9 +5,12 @@ const utils = require('../lib/utils');
 // Returns a boolean whether or not a user is allowed to call a particular method
 // A user with scopes: ['pangolins'] can
 // call 'arn:aws:execute-api:ap-southeast-1::random-api-id/dev/GET/pangolins'
-const authorizeUser = (userScopes, methodArn) => {
+const authorizeUser = (userScopes, methodArn, context) => {
   console.log(`authorizeUser ${JSON.stringify(userScopes)} ${methodArn}`);
-  const hasValidScope = _.some(userScopes, scope => _.endsWith(methodArn, scope));
+  const searchKey = `/${context.httpMethod}/`;
+  const idx = methodArn.indexOf(searchKey);
+  const path = methodArn.slice(idx + searchKey.length);
+  const hasValidScope = _.some(userScopes, scope => _.startsWith(path, scope));
   return hasValidScope;
 };
 
@@ -30,7 +33,7 @@ module.exports.handler = (event, context, callback) => {
 
     // Checks if the user's scopes allow her to call the current endpoint ARN
     const user = decoded.user;
-    const isAllowed = authorizeUser(user.scopes, event.methodArn);
+    const isAllowed = authorizeUser(user.scopes, event.methodArn, event.requestContext);
 
     // Return an IAM policy document for the current endpoint
     const effect = isAllowed ? 'Allow' : 'Deny';

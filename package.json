@@ -21,7 +21,7 @@
     "collectCoverage": true
   },
   "dependencies": {
-    "jsonwebtoken": "^7.4.1",
+    "jsonwebtoken": "^7.4.3",
     "lodash": "^4.17.4"
   }
 }
